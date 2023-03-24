@@ -1,0 +1,93 @@
+openapi: 3.0.0
+info:
+  title: SME
+  description: Validation schema Single Model Endpoint deployment parameteres.
+  version: '1.0'
+paths:
+  '/validate':
+    get:
+      summary: Just so that we can validate schema
+      responses:
+        '200':
+          description: OK
+components:
+  parameters:
+    projectName:
+      name: projectName
+      schema:
+        type: string
+        # pattern: #TODO add it
+      description: Name of an existing DSML project
+      required: true
+      in: query
+    deploymentName:
+      name: deploymentName
+      schema:
+        type: string
+        # pattern: #TODO add it
+      required: true
+      in: query
+    realm:
+      name: realm
+      schema:
+        type: string
+        pattern: '^(?:DEV|QA|UAT|PROD)$'
+        default: DEV
+      description: Deployment realm. Possible values are DEV, QA, UAT, PROD
+      required: true
+      in: query
+    enableCapture:
+      name: enableCapture
+      schema:
+        type: string
+        enum:
+        - 'true'
+        - 'false'
+        default: 'false'
+      required: false
+      in: query
+    captureSamplingPercentage:
+      name: captureSamplingPercentage
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+        maximum: 100
+      required: false
+      in: query
+    instanceType:
+      name: instanceType
+      schema:
+        type: string
+        default: ml.m5.large
+      required: false
+      in: query
+    initialInstances:
+      name: initialInstances
+      schema:
+        type: integer
+        default: 1
+      required: false
+      in: query
+    minInstances:
+      name: minInstances
+      schema:
+        type: integer
+        default: 0
+      required: false
+      in: query
+    maxInstances:
+      name: maxInstances
+      schema:
+        type: integer
+        default: 1
+      required: false
+      in: query
+    maxRequestNoPerMinute:
+      name: maxRequestNoPerMinute
+      schema:
+        type: integer
+        default: 10000
+        minimum: 1
+      required: false
+      in: query

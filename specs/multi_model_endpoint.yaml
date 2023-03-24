@@ -1,0 +1,1513 @@
+openapi: 3.0.0
+info:
+  title: Managed ML Inference Service Control Plane API
+  description: A list of REST APIs for Managed ML Inference Service that enables teams to manage and deploy machine learning models.
+  version: '1.0'
+servers:
+  - url: /
+x-amazon-apigateway-request-validator: 'all'
+x-amazon-apigateway-request-validators:
+  all:
+    validateRequestBody: true
+    validateRequestParameters: true
+  params-only:
+    validateRequestBody: false
+    validateRequestParameters: true
+paths:
+  '/projects/{project_name}':
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+    get:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Get Project
+      tags:
+        - Project
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '401':
+          description: Unauthorized
+      operationId: get-project-by-name
+      description: Retrieve the information of Project with the matching project name.
+  '/assume-role/{project_name}':
+    post:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Assume Role
+      tags:
+        - Project
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+      operationId: assume-role
+      description: Assume a Role within a Project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role:
+                  type: string
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+  '/sync-users/{project_name}':
+    post:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Sync Users
+      tags:
+        - Project
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+      operationId: sync-users
+      description: Sync Project memebership based on Role Policy defined for all Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                desc:
+                  type: string
+                settings:
+                  type: string
+                owners:
+                  type: string
+                developers:
+                  type: string
+                approvers:
+                  type: string
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+  '/sync-endpoints/{project_name}':
+    post:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Sync Endpoints
+      tags:
+        - Project
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+      operationId: sync-endpoints
+      description: Sync Endpoint access memebership based on Role Policy defined
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                endpoints:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Endpoint'
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+  '/projects/{project_name}/modelspecs/{model_name}/{version}':
+    get:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Retrieve a Model Specification
+      tags:
+        - Model Specification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelSpec'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+      operationId: get-modelspec
+      description: Retrieve a Model Specification
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+      - $ref: '#/components/parameters/model_name'
+      - $ref: '#/components/parameters/version'
+  '/projects/{project_name}/modelspecs/{model_name}/version/{version}':
+    get:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Retrieve a Model Specification
+      tags:
+        - Model Specification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelSpec'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+      operationId: get-modelspec-by-version
+      description: Retrieve a Model Specification
+    put:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Patch Model Specification
+      tags:
+        - Model Specification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelSpec'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+      operationId: update-modelspec
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                tags:
+                  type: string
+                status:
+                  type: string
+                  minLength: 1
+      description: Update status field or tags for a Model Specification
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+      - $ref: '#/components/parameters/model_name'
+      - $ref: '#/components/parameters/version'
+  '/projects/{project_name}/modelspecs/{model_name}/tag/{tag}':
+    get:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Retrieve a Model Specification based on its name and tag
+      tags:
+        - Model Specification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelSpec'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+      operationId: get-modelspec-by-tag
+      description: Retrieve a Model Specification
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+      - $ref: '#/components/parameters/model_name'
+      - $ref: '#/components/parameters/tag'
+  '/projects/{project_name}/modelspecs':
+    get:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: List Model Specifications within a project
+      tags:
+        - Model Specification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelSpec'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+      operationId: list-modelspec
+      description: List Model Specifications within a project
+    post:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Create Model Specification
+      tags:
+        - Model Specification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelSpec'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+      operationId: create-modelspec
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                model_name:
+                  type: string
+                  minLength: 1
+                format:
+                  type: string
+                  minLength: 1
+                  enum:
+                    - ONNX
+                    - TENSORFLOW
+                    - PYTORCH
+                image:
+                  type: string
+                  minLength: 1
+                tags:
+                  type: string
+                model_inputs:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/metadatatensor'
+                model_outputs:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/metadatatensor'
+                artifacts_uri:
+                  type: string
+              required:
+                - model_name
+                - format
+                - artifacts_uri
+      description: Create a new Model Specification
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+  '/projects/{project_name}/modelspecsbinders':
+    post:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Create Model Specification Binder
+      tags:
+        - Model Specification Binder
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelSpecBinder'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+      operationId: create-modelspecbinder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                model_name:
+                  type: string
+                  minLength: 1
+                version:
+                  type: integer
+                format:
+                  type: string
+                  minLength: 1
+                body:
+                  type: string
+                  minLength: 1
+                checksum:
+                  type: string
+                artifacts_id:
+                  type: string
+              required:
+                - model_name
+                - version
+      description: Create a new Model Specification Binder
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+  '/projects/{project_name}/modelspecsbinders/id/{binder_id}':
+    get:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Get Model Spec Binder
+      tags:
+        - Model Specification Binder
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelSpecBinder'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+      operationId: get-modelspecbinder-by-id
+      description: Retrieve attributes of an existing Model Spec Binder
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+      - $ref: '#/components/parameters/binder_id'
+  '/projects/{project_name}/modelspecsbinders/version/{model_name}/{version}':
+    get:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Retrieve binders for a Model Specification based on its name and version
+      tags:
+        - Model Specification Binder
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ModelSpecBinder'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+      operationId: get-modelspecbinder-by-version
+      description: Retrieve binders for a specific model spec
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+      - $ref: '#/components/parameters/model_name'
+      - $ref: '#/components/parameters/version'
+  '/projects/{project_name}/artifacts':
+    post:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Create Artifacts
+      tags:
+        - Artifacts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artifacts'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+      operationId: create-artifacts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                body:
+                  type: string
+                  minLength: 1
+                body_format:
+                  type: string
+                  minLength: 1
+                body_checksum:
+                  type: string
+                blob_format:
+                  type: string
+                  minLength: 1
+                blob_checksum:
+                  type: string
+              required:
+                - name
+                - body_format
+                - body_checksum
+                - body
+      description: Create a new Artifacts instance
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+  '/projects/{project_name}/artifacts/id/{artifacts_id}':
+    get:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Get Artifacts based on its id
+      tags:
+        - Artifacts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artifacts'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+      operationId: get-artifacts-by-id
+      description: Retrieve attributes of an existing Artifacts
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+      - $ref: '#/components/parameters/artifacts_id'
+  '/projects/{project_name}/s3_uri':
+    post:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Generate S3 URI
+      tags:
+        - Model Specification
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+      operationId: generate-s3-uri
+      description: Generate Unique S3 uri for uploading model artifacts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                model_name:
+                  type: string
+                  minLength: 1
+              required:
+                - model_name
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+  '/projects/{project_name}/deployments/{deployment_id}':
+    get:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Get Deployment Spec
+      tags:
+        - Deployment Specification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deployment'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+      operationId: get-deploymentspec-by-id
+      description: Retrieve attributes of an existing Deployment Specification
+    parameters:
+      - name: project_name
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
+        description: Name of an existing Project
+      - name: deployment_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Id of an existing Deployment Specification
+  '/projects/{project_name}/deployment-activities/{deployment_id}':
+    get:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Get All Activities for A Deployment Specification
+      tags:
+        - Deployment Specification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeploymentActivity'
+      operationId: get-deploymentspec-activities
+      description: Retrieve Deployment Activity history for a given Deployment Specification
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+      - $ref: '#/components/parameters/deployment_id'
+  '/projects/{project_name}/stack-events/{deployment_id}':
+    get:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Get All Stack Events for A Deployment Specification
+      tags:
+        - Deployment Specification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StackEvent'
+      operationId: get-stack-events
+      description: Retrieve Stack Events for a given Deployment Specification
+      parameters:
+        - $ref: '#/components/parameters/start_time'
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+      - $ref: '#/components/parameters/deployment_id'
+  '/projects/{project_name}/deployments-by-realm/{realm}/{cluster}':
+    get:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Get All Active deployments within a project given realm and cluster
+      tags:
+        - Deployment Specification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Deployment'
+      operationId: get-deployments-by-realm
+      description: Get All Active deployments within a project given realm and cluster
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+      - $ref: '#/components/parameters/realm'
+      - $ref: '#/components/parameters/cluster'
+  '/projects/{project_name}/deployments-by-name/{realm}/{app_name}/{cluster}':
+    get:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Get All Active deployments within a project given name and realm
+      tags:
+        - Deployment Specification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Deployment'
+      operationId: get-deployments-by-name
+      description: Get All Active deployments within a project given name and realm
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+      - $ref: '#/components/parameters/realm'
+      - $ref: '#/components/parameters/app_name'
+      - $ref: '#/components/parameters/cluster'
+  '/projects/{project_name}/deployments-demised/{realm}/{app_name}/{cluster}':
+    get:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Get All Active deployments within a project given name and realm
+      tags:
+        - Deployment Specification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Deployment'
+      operationId: get-demised-deployments-by-name
+      description: Get All demised deployments within a project given name and realm
+      parameters:
+        - $ref: '#/components/parameters/reverse'
+        - $ref: '#/components/parameters/max_items'
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+      - $ref: '#/components/parameters/realm'
+      - $ref: '#/components/parameters/app_name'
+      - $ref: '#/components/parameters/cluster'
+  '/projects/{project_name}/sagemaker/deploy':
+    post:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Deploy a deployment specification
+      tags:
+        - Deployment Specification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deployment'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+      operationId: deploy-to-sagemaker
+      description: Construct and deploy a Deployment Specification to Amazon SageMaker
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                app_name:
+                  type: string
+                realm:
+                  type: string
+                cluster:
+                  type: string
+                model_reference:
+                  type: string
+                min_instances:
+                  type: number
+                  description: The min number of SageMaker ML instances requested
+                max_instances:
+                  type: number
+                  description: The max number of SageMaker ML instances requested
+                instance_type:
+                  type: string
+                  description: The type of SageMaker ML instance on which to deploy the model
+                enable_capture:
+                  type: string
+                  description: Enable capture of prediction outputs
+                capture_sampling_percentage:
+                  type: number
+                  description: sampling percentage
+                subnet_ids:
+                  type: string
+                security_group_ids:
+                  type: string
+                model_weight_a:
+                  type: number
+                model_weight_b:
+                  type: number
+                model_max_request_no_per_minute_a:
+                  type: number
+                model_max_request_no_per_minute_b:
+                  type: number
+              required:
+                - app_name
+                - realm
+                - model_reference
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+  '/projects/{project_name}/sagemaker/delete':
+    post:
+      security:
+        - lambda_authorizer: []
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Replace Model from Deployment
+      tags:
+        - Deployment Specification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deployment'
+      operationId: delete-model-from-sagemaker
+      description: Replace a SageMaker application
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deployment_id:
+                  type: string
+              required:
+                - deployment_id
+    parameters:
+      - name: project_name
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
+        description: Name of an existing Project
+  /signin:
+    get:
+      operationId: signin
+      description: get signin token
+      parameters:
+        - in: "query"
+          name: Session
+          schema:
+            type: "string"
+        - in: "query"
+          name: SessionDuration
+          schema:
+            type: "integer"
+      x-amazon-apigateway-integration:
+        httpMethod: GET
+        payloadFormatVersion: '1.0'
+        type: HTTP_PROXY
+        uri: https://signin.aws.amazon.com/federation?Action=getSigninToken
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: InternalServerError
+        '502':
+          description: BadGateway
+        '504':
+          description: GatewayTimeout
+  '/projects/{project_name}/clusters/{cluster}/repos':
+    get:
+      security:
+        - lambda_authorizer: [ ]
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Get All repos for the given cluster
+      tags:
+        - Images Specification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  repos:
+                    type: array
+                    items:
+                      type: string
+      operationId: get-repos-by-cluster
+      description: Get All ECR repo names for a given cluster
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+      - $ref: '#/components/parameters/cluster'
+  '/projects/{project_name}/clusters/{cluster}/images':
+    get:
+      security:
+        - lambda_authorizer: [ ]
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Get All images for the given repos
+      tags:
+        - Images Specification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  images:
+                    type: array
+                    items:
+                      type: string
+      operationId: get-images-by-repo
+      description: Get All images within a given ECR repo
+      parameters:
+        - $ref: '#/components/parameters/repo'
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+      - $ref: '#/components/parameters/cluster'
+  '/projects/{project_name}/clusters/{cluster}/images/latest':
+    get:
+      security:
+        - lambda_authorizer: [ ]
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Get latest image for the given repo
+      tags:
+        - Images Specification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  latest_image:
+                    type: string
+      operationId: get-latest-repo-image
+      description: Get the latest image for a given ECR repo
+      parameters:
+        - $ref: '#/components/parameters/repo'
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+      - $ref: '#/components/parameters/cluster'
+  '/projects/{project_name}/images/valid':
+    get:
+      security:
+        - lambda_authorizer: [ ]
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Check if an image name is valid
+      tags:
+        - Images Specification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  is_valid:
+                    type: boolean
+      operationId: is-image-valid
+      description: Check if an image name is valid
+      parameters:
+        - $ref: '#/components/parameters/image'
+        - $ref: '#/components/parameters/default_cluster'
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+  '/projects/{project_name}/images/default/{serving_container}':
+    get:
+      security:
+        - lambda_authorizer: [ ]
+      x-amazon-apigateway-integration:
+        uri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_user_arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        timeoutInMillis: '${lambda_user_timeout}'
+        type: aws_proxy
+      summary: Get default image for the given serving_container type
+      tags:
+        - Images Specification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+      operationId: get-default-image
+      description: Get default image for the given serving_container type
+    parameters:
+      - $ref: '#/components/parameters/project_name'
+      - $ref: '#/components/parameters/serving_container'
+components:
+  securitySchemes:
+    lambda_authorizer:
+      type: apiKey
+      name: Authorization
+      in: header
+      x-amazon-apigateway-authorizer:
+        identitySource : 'method.request.header.Authorization, context.httpMethod, context.path'
+        authorizerUri: 'arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_auth_arn}/invocations'
+        authorizerResultTtlInSeconds: 3600
+        type: request
+      x-amazon-apigateway-authtype: custom
+  schemas:
+    Project:
+      title: Project
+      type: object
+      x-examples: {}
+      description: 'Used to define a scope to manage related artifacts, models, deployments, and members'
+      properties:
+        id:
+          type: string
+          description: Unique Id for Project
+        project_name:
+          type: string
+          description: project name
+        description:
+          type: string
+        settings:
+          type: string
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - project_name
+    ModelSpec:
+      title: ModelSpec
+      type: object
+      description: 'A standard format for packaging machine learning models into deployable units, so that it could be deployed to a variety of supported downstream targets such as Amazon SageMaker and etc.'
+      x-examples: {}
+      properties:
+        id:
+          type: string
+          readOnly: true
+        project_name:
+          type: string
+          description: project name
+        model_name:
+          type: string
+        version:
+          type: string
+        status:
+          type: string
+        user_name:
+          type: string
+          readOnly: true
+        format:
+          type: string
+          enum:
+            - ONNX
+            - TENSORFLOW
+            - PYTORCH
+        artifacts_uri:
+          type: string
+        image:
+          type: string
+        tags:
+          type: string
+        model_inputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/metadatatensor'
+        model_outputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/metadatatensor'
+        state:
+          type: string
+          enum:
+            - DEV
+            - UAT
+            - QA
+            - PROD
+          format: int32
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+    ModelSpecBinder:
+      title: ModelSpecBinder
+      type: object
+      description: 'A placeholder for storing metrics and other metadata for a specific ModelSpec instance'
+      x-examples: {}
+      properties:
+        id:
+          type: string
+          readOnly: true
+        project_name:
+          type: string
+          description: project name
+        model_name:
+          type: string
+        version:
+          type: string
+        user_name:
+          type: string
+          readOnly: true
+        body:
+          type: string
+        checksum:
+          type: string
+        format:
+          type: string
+        artifacts_id:
+          type: string
+        ttl:
+          type: integer
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+    Artifacts:
+      title: Artifacts
+      type: object
+      description: 'A placeholder for storing model artifacts including metadata and blobs'
+      x-examples: {}
+      properties:
+        id:
+          type: string
+          readOnly: true
+        project_name:
+          type: string
+          description: project name
+        name:
+          type: string
+        user_name:
+          type: string
+          readOnly: true
+        body:
+          type: string
+        body_format:
+          type: string
+        body_checksum:
+          type: string
+        blob_format:
+          type: string
+        blob_checksum:
+          type: string
+        ttl:
+          type: integer
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+    Deployment:
+      title: Deployment
+      type: object
+      description: 'Given one or more model specification, define a set of concrete deployment options for a specific target'
+      properties:
+        id:
+          type: string
+          readOnly: true
+        project_name:
+          type: string
+          description: project name
+        app_name:
+          type: string
+          description: Name of the deployed application
+        realm:
+          type: string
+        state:
+          type: string
+          enum:
+            - DRAFT
+            - DEPLOYED
+            - ARCHIVED
+          readOnly: true
+        body:
+          type: string
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - project_name
+        - app_name
+        - realm
+    DeploymentActivity:
+      title: DeploymentActivity
+      type: object
+      description: Record and capture modifications made to a Deployment Specification
+      properties:
+        id:
+          type: string
+          readOnly: true
+        project_name:
+          type: string
+          description: project name
+        deployment_id:
+          type: string
+        user_name:
+          type: string
+          readOnly: true
+        action:
+          type: string
+          format: int32
+          enum:
+            - ADD
+            - REPLACE
+            - DEPLOY
+        changes:
+          type: string
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - project_name
+        - deployment_id
+        - action
+        - changes
+    StackEvent:
+      title: StackEvent
+      type: object
+      description: Record and capture events related to a CloudFormation Stack
+      properties:
+        id:
+          type: string
+          readOnly: true
+        project_name:
+          type: string
+          description: project name
+        deployment_id:
+          type: string
+        stack_name:
+          type: string
+        region:
+          type: string
+        record_time:
+          type: string
+        timestamp:
+          type: string
+        logical_id:
+          type: string
+        status:
+          type: string
+        status_reason:
+          type: string
+        type:
+          type: string
+        physical_id:
+          type: string
+        req_token:
+          type: string
+      required:
+        - project_name
+        - deployment_id
+        - stack_name
+        - region
+        - record_time
+        - timestamp
+    Endpoint:
+      title: Endpoint
+      type: object
+      description: Endpoint Information
+      properties:
+        realm:
+          type: string
+        endpoint_name:
+          type: string
+          description: endpoint name
+        users:
+          type: string
+      required:
+        - realm
+        - endpoint_name
+        - users
+    metadatatensor:
+      title: metadatatensor
+      type: object
+      properties:
+        name:
+          type: string
+        datatype:
+          type: string
+        shape:
+          type: array
+          items:
+            type: integer
+      required:
+        - name
+        - datatype
+        - shape
+  parameters:
+    project_name:
+      name: project_name
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
+      description: Name of an existing Project
+    artifacts_id:
+      name: artifacts_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Id of an existing Artifacts instance
+    binder_id:
+      name: binder_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Id of an existing Model Spec Binder
+    deployment_id:
+      name: deployment_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Id of an existing Deployment Specification
+    app_name:
+      name: app_name
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Name of deployment
+    realm:
+      name: realm
+      in: path
+      required: true
+      schema:
+        type: string
+      description: deployment domain
+    cluster:
+      name: cluster
+      in: path
+      required: true
+      schema:
+        type: string
+      description: deployment cluster
+    model_name:
+      name: model_name
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Name of ML Model
+    tag:
+      name: tag
+      in: path
+      required: true
+      schema:
+        type: string
+    version:
+      name: version
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: Version
+    start_time:
+      name: start_time
+      in: query
+      schema:
+        type: string
+        format: date-time
+    repo:
+      name: repo
+      in: query
+      required: true
+      schema:
+        type: string
+      description: Name of ecr repo within cluster
+    image:
+      name: image
+      in: query
+      required: true
+      schema:
+        type: string
+      description: Possible name of a serving image
+    serving_container:
+      name: serving_container
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Type of serving container
+    default_cluster:
+      name: default_cluster
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Optional cluster to get default image
+    reverse:
+      name: reverse
+      in: query
+      required: false
+      schema:
+        type: boolean
+      description: sorting order of items
+    max_items:
+      name: max_items
+      in: query
+      required: false
+      schema:
+        type: integer
+      description: max number of items to return
+tags:
+  - name: Project
+    description: Project
+  - name: Model Specification
+    description: Model Specification
+  - name: Deployment Specification
+    description: Deployment Specification
+  - name: Model Specification Binder
+    description: Model Specification Binder
+  - name: Artifacts
+    description: Artifacts
